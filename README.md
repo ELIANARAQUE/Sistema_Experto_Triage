@@ -1,4 +1,4 @@
-# CardioTriage — Sistema experto de triaje médico
+# Clasificación Experta-Triage Medico
 
 Aplicación Flask con reglas deterministas de clasificación en cinco niveles, perfiles de administrador y personal de enfermería, y almacenamiento en Supabase.
 
