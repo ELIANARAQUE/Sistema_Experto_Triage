@@ -1,0 +1,74 @@
+{% extends 'base.html' %} {% block content %}
+<main class="auth-wrap">
+  <section class="auth-hero">
+    <div class="heartbeat">+</div>
+    <h1>Atencion con<br /><strong>prioridad humana</strong></h1>
+    <p>
+      Sistema experto de triaje medico para una respuesta segura y oportuna.
+    </p>
+    <div class="dots">o o o</div>
+  </section>
+  <section class="auth-card">
+    <p class="eyebrow">
+      {{ 'BIENVENIDO' if mode == 'login' else 'NUEVO USUARIO' }}
+    </p>
+    <h2>{{ 'Inicia sesion' if mode == 'login' else 'Crea tu cuenta' }}</h2>
+    {% if mode == 'login' %}
+    <form method="post">
+      <label
+        >Correo institucional<input type="email" name="email" required /></label
+      ><label
+        >Contrasena<input type="password" name="password" required /></label
+      ><button class="button">Ingresar</button>
+    </form>
+    <p class="switch">
+      No tienes cuenta? <a href="{{ url_for('register') }}">Registrate</a>
+    </p>
+    {% else %}
+    <form id="registerForm">
+      <label>Nombre completo<input name="full_name" required /></label
+      ><label
+        >Correo institucional<input type="email" name="email" required /></label
+      ><label
+        >Tipo de usuario<select name="role" required>
+          <option value="">Selecciona</option>
+          <option value="admin">Administrador</option>
+          <option value="personal">Personal de enfermeria</option>
+        </select></label
+      ><label
+        >Contrasena<input
+          type="password"
+          name="password"
+          minlength="8"
+          required /></label
+      ><button type="submit" class="button">Registrarme</button>
+    </form>
+    <p class="switch">
+      Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesion</a>
+    </p>
+    {% endif %}
+  </section>
+</main>
+{% if mode == 'register' %}
+<div id="superModal" class="modal">
+  <div class="modal-card">
+    <button class="close" data-close>x</button>
+    <h2>Validacion requerida</h2>
+    <p>
+      Ingresa la contrasena de superadministrador para autorizar este registro.
+    </p>
+    <input id="superPassword" type="password" placeholder="Contrasena" />
+    <p id="registerError" class="error-text"></p>
+    <button id="confirmRegister" class="button">Validar y registrar</button>
+  </div>
+</div>
+<div id="successModal" class="modal">
+  <div class="modal-card success">
+    <div class="success-icon">OK</div>
+    <h2>Registro exitoso</h2>
+    <p>
+      Tu cuenta fue creada y la sesion esta iniciada. Te llevaremos a tu panel.
+    </p>
+  </div>
+</div>
+{% endif %} {% endblock %}

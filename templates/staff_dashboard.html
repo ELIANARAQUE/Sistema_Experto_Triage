@@ -1,0 +1,181 @@
+{% extends 'base.html' %}{% block content %}
+<main class="page">
+  <section class="welcome">
+    <div>
+      <p class="eyebrow">PANEL DE ENFERMERÍA</p>
+      <h1>Toma de datos del paciente</h1>
+      <p>
+        Completa la valoración. El sistema aplica las reglas clínicas de
+        priorización.
+      </p>
+    </div>
+    <div class="triage-scale">
+      <b>1 Rojo</b><b>2 Naranja</b><b>3 Amarillo</b><b>4 Verde</b><b>5 Azul</b>
+    </div>
+  </section>
+  <form id="triageForm" class="clinical-form">
+    <section>
+      <h2>Identificación y datos demográficos</h2>
+      <div class="grid">
+        <label>Documento<input name="document" required /></label
+        ><label>Nombre completo<input name="full_name" required /></label
+        ><label
+          >Edad<input
+            name="age"
+            type="number"
+            min="0"
+            max="120"
+            required /></label
+        ><label
+          >Sexo<select name="sex" required>
+            <option value="">Selecciona</option>
+            {% for v in options.get('sex',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Peso (kg)<input
+            name="weight"
+            type="number"
+            step=".1"
+            required /></label
+        ><label
+          >Embarazo / última menstruación<select name="pregnancy">
+            {% for v in options.get('pregnancy',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        >
+      </div>
+    </section>
+    <section>
+      <h2>Motivo de consulta</h2>
+      <div class="grid">
+        <label
+          >Motivo principal<select name="chief_complaint" required>
+            {% for v in options.get('complaint',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Duración de síntomas<select name="symptom_duration" required>
+            {% for v in options.get('duration',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        >
+      </div>
+    </section>
+    <section>
+      <h2>Signos vitales y evaluación</h2>
+      <div class="grid vital">
+        <label
+          >Frecuencia respiratoria<input
+            name="respiratory_rate"
+            type="number"
+            required /></label
+        ><label>SpO₂ (%)<input name="spo2" type="number" required /></label
+        ><label
+          >Frecuencia cardíaca<input
+            name="heart_rate"
+            type="number"
+            required /></label
+        ><label
+          >Presión sistólica<input
+            name="systolic"
+            type="number"
+            required /></label
+        ><label
+          >Presión diastólica<input
+            name="diastolic"
+            type="number"
+            required /></label
+        ><label
+          >Temperatura °C<input
+            name="temperature"
+            type="number"
+            step=".1"
+            required /></label
+        ><label
+          >Nivel de conciencia<select name="avpu" required>
+            {% for v in options.get('avpu',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Dolor (0–10)<input
+            name="pain"
+            type="number"
+            min="0"
+            max="10"
+            required
+        /></label>
+      </div>
+    </section>
+    <section>
+      <h2>Antecedentes y asignación</h2>
+      <div class="grid">
+        <label
+          >Alergias<select name="allergies">
+            {% for v in options.get('allergy',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Medicamentos actuales<select name="medications">
+            {% for v in options.get('medication',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Antecedentes médicos<select name="history">
+            {% for v in options.get('history',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Riesgo suicida<select name="suicide_risk">
+            {% for v in options.get('yes_no',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Historia de viajes<select name="travel_history">
+            {% for v in options.get('yes_no',[]) %}
+            <option>{{v}}</option>
+            {% endfor %}
+          </select></label
+        ><label
+          >Doctor asignado<select name="doctor_id" required>
+            {% for d in doctors %}
+            <option value="{{d.id}}">{{d.full_name}} — {{d.office}}</option>
+            {% endfor %}
+          </select></label
+        >
+      </div>
+      <label
+        >Observaciones adicionales<textarea
+          name="observations"
+          placeholder="Único campo de texto libre"
+        ></textarea>
+      </label>
+    </section>
+    <button class="button save">Guardar valoración y clasificar</button>
+  </form>
+</main>
+<div id="resultModal" class="modal">
+  <div class="modal-card result">
+    <button class="close" data-close>×</button>
+    <p class="eyebrow">VALORACIÓN GUARDADA</p>
+    <h2 id="resultTitle"></h2>
+    <div id="resultColor" class="color-pill"></div>
+    <p id="resultDetails"></p>
+    <hr />
+    <p>
+      <b>Consultorio:</b> <span id="office"></span><br /><b>Doctor:</b>
+      <span id="doctor"></span><br /><b>Hora:</b> <span id="time"></span>
+    </p>
+    <button class="button" data-close>Finalizar</button>
+  </div>
+</div>
+{% endblock %}

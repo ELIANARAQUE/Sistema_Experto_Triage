@@ -1,0 +1,7 @@
+Flask==3.1.0
+python-dotenv==1.0.1
+# Versiones recientes admiten las claves sb_secret_... de Supabase.
+supabase>=2.20.0
+cryptography==44.0.0
+openpyxl==3.1.5
+reportlab==4.2.5

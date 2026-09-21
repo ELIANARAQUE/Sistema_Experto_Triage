@@ -1,0 +1,72 @@
+{% extends 'base.html' %}{% block content %}
+<main class="page">
+  <section class="welcome admin-title">
+    <div>
+      <p class="eyebrow">PANEL ADMINISTRATIVO</p>
+      <h1>Seguimiento de pacientes</h1>
+      <p>
+        Consulta las valoraciones, médicos asignados y exporta la información
+        requerida.
+      </p>
+    </div>
+    <div class="report-actions">
+      <button data-report="excel" class="button secondary">
+        Descargar Excel</button
+      ><button data-report="pdf" class="button">Descargar PDF</button>
+    </div>
+  </section>
+  <section class="table-card">
+    <div class="table-head">
+      <h2>Registros de triaje</h2>
+      <span>{{triages|length}} pacientes</span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th><input id="selectAll" type="checkbox" /></th>
+            <th>Paciente</th>
+            <th>Triaje</th>
+            <th>Doctor / consultorio</th>
+            <th>Signos</th>
+            <th>Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in triages %}
+          <tr>
+            <td>
+              <input class="row-select" type="checkbox" value="{{t.id}}" />
+            </td>
+            <td>
+              <b>{{t.patients.full_name}}</b><br /><small
+                >{{t.patients.document}} · {{t.patients.age}} años</small
+              >
+            </td>
+            <td>
+              <span class="badge {{t.color|lower}}">{{t.color}}</span
+              ><small>Nivel {{t.level}} · {{t.response_time}}</small>
+            </td>
+            <td>
+              {{t.doctors.full_name}}<br /><small>{{t.doctors.office}}</small>
+            </td>
+            <td>
+              SpO₂ {{t.spo2}}% · FC {{t.heart_rate}}<br /><small
+                >PA {{t.systolic}}/{{t.diastolic}} · Dolor {{t.pain}}</small
+              >
+            </td>
+            <td>{{t.created_at[:16].replace('T',' ')}}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" class="empty">
+              Aún no hay valoraciones registradas.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+{% endblock %}

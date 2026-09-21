@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CardioTriage</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="{{ url_for('dashboard') }}"
+        ><span>♡</span>Cardio<span>Triage</span
+        ><small>priorización clínica inteligente</small></a
+      >{% if session.user_id %}
+      <nav>
+        <span>Hola, {{ session.user_name }}</span
+        ><a href="{{ url_for('logout') }}">Cerrar sesión</a>
+      </nav>
+      {% endif %}
+    </header>
+    {% with messages=get_flashed_messages(with_categories=true) %}{% for
+    category,message in messages %}
+    <div class="toast {{category}}">{{message}}</div>
+    {% endfor %}{% endwith %} {% block content %}{% endblock %} {% if
+    session.user_id %}
+    <div id="timeoutModal" class="modal">
+      <div class="modal-card">
+        <h2>Tu sesión está por terminar</h2>
+        <p>Por seguridad, se cerrará en menos de dos minutos.</p>
+        <button id="keepActive" class="button">Mantener activa</button>
+      </div>
+    </div>
+    {% endif %}
+    <script src="{{ url_for('static',filename='app.js') }}"></script>
+  </body>
+</html>
