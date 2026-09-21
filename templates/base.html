@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>CardioTriage</title>
+    <title>Clasificacion Experta-Triage Medico</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static',filename='style.css') }}"
@@ -12,7 +12,7 @@
   <body>
     <header class="topbar">
       <a class="brand" href="{{ url_for('dashboard') }}"
-        ><span>♡</span>Cardio<span>Triage</span
+        ><span>♡</span>Clasificación Experta<span>-Triage Medico</span
         ><small>priorización clínica inteligente</small></a
       >{% if session.user_id %}
       <nav>
