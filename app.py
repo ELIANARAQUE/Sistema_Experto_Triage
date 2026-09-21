@@ -3,6 +3,7 @@ import hashlib
 import logging
 import io
 import os
+import re
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 
@@ -146,18 +147,35 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    document_types = db().table("lookup_options").select("label").eq("category", "document_type").eq("active", True).order("sort_order").execute().data
     if request.method == "POST":
         if request.form.get("super_password") != "admin123":
             return jsonify(ok=False, message="Clave de superadministrador incorrecta."), 403
         try:
-            user = db().table("app_users").insert({"full_name": request.form["full_name"], "email": request.form["email"].lower(), "role": request.form["role"], "password_hash": generate_password_hash(request.form["password"])}).execute().data[0]
+            first_name = request.form.get("first_name", "")
+            last_name = request.form.get("last_name", "")
+            document_type = request.form.get("document_type", "")
+            document_number = request.form.get("document_number", "")
+            if not re.fullmatch(r"[A-Za-z]{1,25}", first_name) or not re.fullmatch(r"[A-Za-z]{1,25}", last_name):
+                return jsonify(ok=False, message="El primer nombre y el primer apellido solo admiten letras sin espacios (máximo 25)."), 400
+            if not re.fullmatch(r"[0-9]{5,25}", document_number):
+                return jsonify(ok=False, message="El número de documento debe contener entre 5 y 25 dígitos."), 400
+            if document_type not in {item["label"] for item in document_types}:
+                return jsonify(ok=False, message="Selecciona un tipo de documento válido."), 400
+            user = db().table("app_users").insert({
+                "first_name": first_name, "last_name": last_name,
+                "full_name": f"{first_name} {last_name}",
+                "document_type": document_type, "document_number": encrypt(document_number),
+                "email": request.form["email"].lower(), "role": request.form["role"],
+                "password_hash": generate_password_hash(request.form["password"])
+            }).execute().data[0]
             # El usuario recién validado queda autenticado inmediatamente.
             session.clear(); session.permanent = True
             session.update(user_id=user["id"], user_name=user["full_name"], role=user["role"], last_activity=datetime.now(timezone.utc).timestamp())
             return jsonify(ok=True, redirect=url_for("dashboard"))
         except Exception as error:
             return jsonify(ok=False, message=registration_error_message(error)), 400
-    return render_template("auth.html", mode="register")
+    return render_template("auth.html", mode="register", document_types=document_types)
 
 @app.route("/logout")
 def logout():

@@ -1,4 +1,9 @@
 const $ = (s) => document.querySelector(s);
+document.querySelectorAll(".name-only").forEach((input) => {
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/[^A-Za-z]/g, "");
+  });
+});
 document
   .querySelectorAll("[data-close]")
   .forEach(

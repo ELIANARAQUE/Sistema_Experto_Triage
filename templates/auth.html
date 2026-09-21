@@ -26,22 +26,66 @@
     </p>
     {% else %}
     <form id="registerForm">
-      <label>Nombre completo<input name="full_name" required /></label
-      ><label
-        >Correo institucional<input type="email" name="email" required /></label
-      ><label
+      <label
+        >Primer nombre
+        <input
+          class="name-only"
+          name="first_name"
+          maxlength="25"
+          pattern="[A-Za-z]{1,25}"
+          autocomplete="given-name"
+          required
+        />
+      </label>
+      <label
+        >Primer apellido
+        <input
+          class="name-only"
+          name="last_name"
+          maxlength="25"
+          pattern="[A-Za-z]{1,25}"
+          autocomplete="family-name"
+          required
+        />
+      </label>
+      <label
+        >Tipo de documento
+        <select name="document_type" required>
+          <option value="">Selecciona</option>
+          {% for type in document_types %}
+          <option value="{{ type.label }}">{{ type.label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label
+        >Numero de documento
+        <input
+          name="document_number"
+          type="text"
+          inputmode="numeric"
+          maxlength="25"
+          pattern="[0-9]{5,25}"
+          required
+        />
+      </label>
+      <label
+        >Correo institucional<input type="email" name="email" required
+      /></label>
+      <label
         >Tipo de usuario<select name="role" required>
           <option value="">Selecciona</option>
           <option value="admin">Administrador</option>
           <option value="personal">Personal de enfermeria</option>
         </select></label
-      ><label
+      >
+      <label
         >Contrasena<input
           type="password"
           name="password"
           minlength="8"
-          required /></label
-      ><button type="submit" class="button">Registrarme</button>
+          required
+      /></label>
+      <button type="submit" class="button">Registrarme</button>
     </form>
     <p class="switch">
       Ya tienes cuenta? <a href="{{ url_for('login') }}">Inicia sesion</a>
